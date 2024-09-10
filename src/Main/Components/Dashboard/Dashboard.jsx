@@ -1,7 +1,6 @@
 import React from 'react';
 import DashBoardTopHeader from './DashboardTopHeader/DashBoardTopHeader';
 import DashBoardBody from './DashBoardMainBody/DashBoardBody';
-import Sidebar from '../sidebar/Sidebar';
 
 const Dashboard = () => {
   return (

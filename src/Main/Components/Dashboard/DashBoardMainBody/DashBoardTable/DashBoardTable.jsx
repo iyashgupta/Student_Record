@@ -50,7 +50,7 @@ const tableRowData = [
 
 const DashBoardTable = () => {
   return (
-    <div className="table-responsive">
+    <div className="table-responsive" style={{height:'187px'}}>
         <table className="table table-hover table-nowrap">
           <thead className="thead-light">
             <tr>

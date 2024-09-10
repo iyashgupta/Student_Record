@@ -1,0 +1,15 @@
+/* Sidebar.css */
+.active-tab {
+    background-color: #8a8efc;
+    color: white !important;
+  }
+
+  
+  .active-icon {
+    color: white !important;
+  }
+  .active-tab:hover , .active-tab:hover > .active-icon {
+    color:#8a8efc !important
+ }
+ 
+  
