@@ -1,0 +1,62 @@
+
+
+.navbar-container {
+    width: 100%;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    height:9vh;
+    opacity: .9;
+}
+
+.navbar {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center !important;
+    justify-content: space-between;
+    padding: 10px;
+    color: #d1d5db;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    height:100%;
+}
+.navbar-right{
+    display:flex;
+    gap:20px
+}
+.container-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .animated-text {
+    font-size: 18px;
+    position: relative;
+    cursor: pointer;  /* Optional: Makes the text act like a button */
+  }
+  
+  .animated-text::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1.4px;
+    display: block;
+    background: white;
+    transition: width 0.3s ease;
+    bottom: 1px;
+  }
+  
+  .animated-text:hover::after {
+    width: 100%;
+    color:white   
+  }
+
+  .active-auth-tab{
+    color:white
+  }
+  

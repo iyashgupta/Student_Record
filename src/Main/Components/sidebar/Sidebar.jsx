@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import ToperSidebar from "../sidebar/ToperSidebar/ToperSidebar";
 import SidebarFooter from "./SidebarFooter/SidebarFooter";
 import SideBarLogoHeader from "./SidebarLogoHeader/SideBarLogoHeader";
-import { useNavigate } from "react-router-dom";
 import "../sidebar/Sidebar.css"; // Assuming you use CSS modules or a similar approach for styles
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState('Dashboard');
 
   return (

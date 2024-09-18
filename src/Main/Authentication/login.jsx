@@ -10,17 +10,18 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import './login.css'
 
 const Login = () => {
   return (
-    <Container maxW="sm" centerContent mt={8}>
+    <div className='login-container'>
+    <Container maxW="sm" centerContent>
       <Box
         w="100%"
         p={6}
         borderRadius="lg"
-        // colorScheme="blackAlpha"
         border="1.8px solid"
-        borderColor="gray.300"  // Light border color
+        borderColor="#000"
         textAlign="center"
       >
         {/* Welcome Text */}
@@ -32,14 +33,14 @@ const Login = () => {
         </Text>
 
         {/* Form */}
-        <VStack as="form" spacing={4}>
+        <VStack as="form" spacing={4} alignItems="center" h="100%">  {/* 100% height applied to VStack */}
           <FormControl id="emailOrUsername" isRequired>
-            <FormLabel>Email or Username</FormLabel>
+            <FormLabel>Email </FormLabel>
             <Input
               type="text"
               placeholder="Enter email or username"
-              focusBorderColor="blackAlpha.800" // Dark focus border
-              bg="white" // White input background
+              focusBorderColor="blackAlpha.800"
+              bg="white"
               borderRadius="md"
             />
           </FormControl>
@@ -69,6 +70,7 @@ const Login = () => {
         </VStack>
       </Box>
     </Container>
+    </div>
   );
 };
 
