@@ -15,7 +15,8 @@ import {
 import { _post } from "../../server";
 import Loader from "../Loader/Loader";
 import { passwordStrength } from "check-password-strength";
-import AlertAnimation from "../AlertAnimation/AlertAnimation"
+import AlertAnimation from "../AlertAnimation/AlertAnimation";
+import EmailValidator from 'email-validator';
 
 // Initial form data
 const initialData = {
@@ -27,8 +28,11 @@ const initialData = {
 };
 
 const initialError = {
-  passwordError : { message:"" , status:""}
-}
+  passwordError: { message: "", status: "" },
+  userNameError: { message: "", status: "" },
+  userFullNameError: { message: "", status: "" },
+  emailError:{ message: "", status: "" }
+};
 
 const SignUp = () => {
   const toast = useToast();
@@ -36,11 +40,99 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState(initialError);
   const [loading, setLoading] = useState(false);
 
+  // Validating Unique userName
+  const validateUniqueUserName = async (value) => {
+    const usernamePattern =
+      /^(?=.{3,16}$)(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+
+    if (!usernamePattern.test(value)) {
+      return setErrorMessage({
+        ...errorMessage,
+        userNameError: { status: "error", message: "Invalid User Name!" },
+      });
+    }
+    try {
+      const { message, status } = await _post("/uniqueusername", {
+        userName: value,
+      });
+      setErrorMessage({
+        ...errorMessage,
+        userNameError: { status: status ? "success" : "error", message },
+      });
+    } catch (err) {
+      setErrorMessage({
+        ...errorMessage,
+        userNameError: { status: "error", message: err.response.data.message },
+      });
+      console.log(err);
+    }
+  };
+
   // Handle input changes
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUserInfo({ ...userInfo, [name]: value });
-  
+
+    if (name === "userFullName") {
+      if (value === "") {
+        return setErrorMessage({
+          ...errorMessage,
+          userFullNameError: initialError.userFullNameError,
+        });
+      }
+
+      if (/\d/.test(value)) {
+        return setErrorMessage({
+          ...errorMessage,
+          userFullNameError: {
+            status: "error",
+            message: "No Numbers Allowed" ,
+          },
+        });
+      }
+
+      setErrorMessage({
+        ...errorMessage,
+        userFullNameError:
+          value.length < 4
+            ? {
+                message: "Too Short",
+                status: "error",
+              }
+            : { message: "Looks Good", status: "success" },
+      });
+    }
+     
+    if (name === "userName") {
+      if (value === "") {
+        return setErrorMessage({
+          ...errorMessage,
+          userNameError: initialError.userNameError,
+        });
+      }
+      validateUniqueUserName(value);
+    }
+
+    if(name === 'userEmail'){
+      if(value === ""){
+           return setErrorMessage({
+            ...errorMessage,
+            emailError: initialError.emailError,
+          });
+      }
+      if(!EmailValidator.validate(value)){
+         return  setErrorMessage({
+          ...errorMessage,
+          emailError: { message:"Email Invalid!" , status:"error" },
+        });
+      }
+
+      setErrorMessage({
+        ...errorMessage,
+        emailError: { message:"Valid Email!" , status:"success" },
+      });
+    }
+
     if (name === "userPassword") {
       // Reset error if password is cleared
       if (value === "") {
@@ -49,7 +141,7 @@ const SignUp = () => {
           passwordError: initialError.passwordError,
         });
       }
-  
+
       // Check for password strength
       const strength = passwordStrength(value).value;
       if (strength === "Weak" || strength === "Too weak") {
@@ -58,22 +150,21 @@ const SignUp = () => {
           passwordError: { message: "Weak Password", status: "error" },
         });
       }
-  
+
       if (strength === "Medium") {
         return setErrorMessage({
           ...errorMessage,
           passwordError: { message: "Password Not Secured", status: "warning" },
         });
       }
-  
+
       // If password is strong
       setErrorMessage({
         ...errorMessage,
         passwordError: { message: "Secured Password", status: "success" },
       });
-    }
+    }  
   };
-  
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -83,7 +174,7 @@ const SignUp = () => {
     try {
       const data = await _post("/registeruser", userInfo);
       setUserInfo(initialData);
-      handleClick("Data Added Sucessfully!", "success");
+      handleClick("Data Added Successfully!", "success");
     } catch (err) {
       console.log(err, "data");
     } finally {
@@ -103,9 +194,9 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-        // eslint-disable-next-line
-        console.log('Component Mounted')
-  },[])
+    // eslint-disable-next-line
+    console.log("Component Mounted");
+  }, []);
 
   return (
     <Fragment>
@@ -133,8 +224,8 @@ const SignUp = () => {
 
             <VStack
               as="form"
-              spacing={3}
-              onSubmit={handleSubmit} // Make sure the handler is here
+              spacing={2} // Increased spacing to accommodate absolute positioned alerts
+              onSubmit={handleSubmit}
             >
               <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                 <FormControl id="FullName" isRequired>
@@ -142,19 +233,37 @@ const SignUp = () => {
                   <Input
                     placeholder="Full name"
                     name="userFullName"
+                    className="mb-1"
                     value={userInfo.userFullName}
                     onChange={handleChange}
+                  />
+                  <AlertAnimation
+                    message={errorMessage.userFullNameError.message}
+                    status={errorMessage.userFullNameError.status}
                   />
                 </FormControl>
 
                 <FormControl id="UserName" isRequired>
                   <FormLabel>User Name</FormLabel>
-                  <Input
-                    placeholder="User name"
-                    name="userName"
-                    value={userInfo.userName}
-                    onChange={handleChange}
-                  />
+                  <Box position="relative">
+                    <Input
+                      placeholder="User name"
+                      name="userName"
+                      className="mb-1"
+                      value={userInfo.userName}
+                      onChange={handleChange}
+                    />
+                    <AlertAnimation
+                      message={errorMessage.userNameError.message}
+                      status={errorMessage.userNameError.status}
+                      position="absolute"
+                      bottom="0"
+                      left="0"
+                      right="0"
+                      bg="white"
+                      zIndex="docked"
+                    />
+                  </Box>
                 </FormControl>
               </Grid>
 
@@ -163,26 +272,39 @@ const SignUp = () => {
                 <Input
                   type="email"
                   placeholder="Email"
+                  className='mb-1'
                   name="userEmail"
                   value={userInfo.userEmail}
                   onChange={handleChange}
                 />
+                <AlertAnimation message={errorMessage.emailError.message} status={errorMessage.emailError.status} />
               </FormControl>
 
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
-                <Input
-                  type="password"
-                  className="mb-1"
-                  placeholder="Password"
-                  name="userPassword"
-                  value={userInfo.userPassword}
-                  onChange={handleChange}
-                />
-               <AlertAnimation message={errorMessage.passwordError.message} status={errorMessage.passwordError.status} />
+                <Box position="relative">
+                  <Input
+                    type="password"
+                    className="mb-1"
+                    placeholder="Password"
+                    name="userPassword"
+                    value={userInfo.userPassword}
+                    onChange={handleChange}
+                  />
+                  <AlertAnimation
+                    message={errorMessage.passwordError.message}
+                    status={errorMessage.passwordError.status}
+                    position="absolute"
+                    bottom="0"
+                    left="0"
+                    right="0"
+                    bg="white"
+                    zIndex="docked"
+                  />
+                </Box>
               </FormControl>
 
-              <FormControl id="Confirm Password" isRequired>
+              <FormControl id="ConfirmPassword" isRequired>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
@@ -194,7 +316,7 @@ const SignUp = () => {
               </FormControl>
 
               <Button
-                type="submit" // Submit button must be of type "submit"
+                type="submit"
                 colorScheme="blackAlpha"
                 bg="black"
                 color="white"

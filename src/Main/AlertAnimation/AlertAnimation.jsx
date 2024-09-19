@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Alert, AlertIcon } from "@chakra-ui/react";
 
 const AlertAnimation = ({ status, message }) => {
-  console.log(status,message,'yash')
   if (!status || !message) {
     return null;
   }
@@ -12,7 +11,7 @@ const AlertAnimation = ({ status, message }) => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
     >
       <Alert
         status={status}
