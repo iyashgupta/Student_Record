@@ -3,16 +3,13 @@ import "./Navbar.css";
 import AuthSidebar from "./AuthSIdebar/AuthSidebar";
 
 const Navbar = () => {
-  const logedIn = true
+  const logedIn = true;
   return (
-      <nav className="navbar">
-        <div className="navbar-left">YourName</div>
-     
-      {
-        logedIn ? <AuthSidebar /> : <span>sidebar</span>
-      }
-        
-      </nav>
+    <nav className="navbar">
+      <div className="navbar-left">YourName</div>
+
+      {logedIn ? <AuthSidebar /> : <span>rightbar</span>}
+    </nav>
   );
 };
 
