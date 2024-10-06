@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { _post } from "../../server";
 import './loginsignup.css';
 import logo from "../../assests/logo.svg"
+import { useNavigate } from 'react-router-dom';
 
 const initialLoginData = {
   userEmail: "",
@@ -10,6 +11,7 @@ const initialLoginData = {
 
 const Login = () => {
   const [userData, setUserData] = useState(initialLoginData);
+  const navigate= useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,7 +81,7 @@ const Login = () => {
             Lorem ipsum, dolor sit amet consectetur adipisicing elit.
             Debitis, ex ratione. Aliquid!
           </p>
-          <button className="btn transparent" id="sign-up-btn">
+          <button className="btn transparent" id="sign-up-btn" onClick={() => navigate('/signup')}>
             Sign up
           </button>
         </div>

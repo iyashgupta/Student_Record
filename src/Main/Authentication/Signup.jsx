@@ -13,7 +13,6 @@ const initialData = {
   name: "",
   mobileNumber: "",
   password: "",
-  retypePassword: "",
   email: "",
 };
 
@@ -106,11 +105,6 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form reload
 
-    // Check if passwords match
-    if (userInfo.password !== userInfo.retypePassword) {
-      return handleClick("Passwords don't match!", "error", "Failed!");
-    }
-
     // Check for any remaining errors
     const statusFalse = Object.keys(errorMessage).find(
       (ele) => errorMessage[ele]["status"] === "error"
@@ -153,6 +147,7 @@ const Signup = () => {
         <div className="signin-signup">
           <form className="sign-up-form" onSubmit={handleSubmit}>
             <h2 className="title">Sign up</h2>
+            {/* <h5>invalid credential</h5> */}
             <div className="input-field">
               <i className="fas fa-user"></i>
               <input
@@ -209,17 +204,6 @@ const Signup = () => {
               )} */}
             </div>
 
-            <div className="input-field">
-              <i className="fas fa-lock"></i>
-              <input
-                type="password"
-                placeholder="Retype Password"
-                name="retypePassword"
-                value={userInfo.retypePassword}
-                onChange={handleChange}
-              />
-            </div>
-
             <input type="submit" className="btn" value="Sign up" />
             <p className="social-text">Or Sign up with social platforms</p>
             <div className="social-media">
@@ -250,7 +234,7 @@ const Signup = () => {
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
               laboriosam ad deleniti.
             </p>
-            <button class="btn transparent" id="sign-in-btn">
+            <button class="btn transparent" id="sign-in-btn" onClick={() => navigate('/login')}>
               Sign in
             </button>
           </div>
