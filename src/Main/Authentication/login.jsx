@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -10,9 +10,33 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { _post } from "../../server" 
 import './login.css'
 
+const initialLoginData = {
+      userEmail : "",
+      userPassword : "",
+}
+
 const Login = () => {
+  const [userData,setUserData] = useState(initialLoginData)
+
+
+  const handleSubmit =async (e) => {
+    e.preventDefault()
+
+      try{
+          const res = await _post('/login', userData)
+            console.log(res,'front','printed')
+      }catch(err) {
+
+      }
+  }
+
+  const handleChange= ({ target }) => {
+      const {name ,value} = target
+      setUserData({ ...userData, [name]: value })
+  }
   return (
     <div className='login-container'>
     <Container maxW="sm" centerContent>
@@ -33,7 +57,7 @@ const Login = () => {
         </Text>
 
         {/* Form */}
-        <VStack as="form" spacing={4} alignItems="center" h="100%">  {/* 100% height applied to VStack */}
+        <VStack as="form" spacing={4} alignItems="center" h="100%" onSubmit={handleSubmit}>  {/* 100% height applied to VStack */}
           <FormControl id="emailOrUsername" isRequired>
             <FormLabel>Email </FormLabel>
             <Input
@@ -42,7 +66,10 @@ const Login = () => {
               focusBorderColor="blackAlpha.800"
               bg="white"
               borderRadius="md"
-            />
+              name='userEmail'
+              value={userData.userEmail}
+              onChange={handleChange}
+              />
           </FormControl>
 
           <FormControl id="password" isRequired>
@@ -53,6 +80,9 @@ const Login = () => {
               focusBorderColor="blackAlpha.800"
               bg="white"
               borderRadius="md"
+              name='userPassword'
+              value={userData.userPassword}
+              onChange={handleChange}
             />
           </FormControl>
 

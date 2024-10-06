@@ -13,6 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { _post } from "../../server";
+import { useNavigate } from "react-router-dom";
 import Loader from "../Loader/Loader";
 import { passwordStrength } from "check-password-strength";
 import AlertAnimation from "../AlertAnimation/AlertAnimation";
@@ -20,17 +21,17 @@ import EmailValidator from 'email-validator';
 
 // Initial form data
 const initialData = {
-  userFullName: "",
-  userName: "",
-  userPassword: "",
-  userRetypePassword: "",
-  userEmail: "",
+  name: "",
+  mobileNumber: "",
+  password: "",
+  retypePassword: "",
+  email: "",
 };
 
 const initialError = {
   passwordError: { message: "", status: "" },
-  userNameError: { message: "", status: "" },
-  userFullNameError: { message: "", status: "" },
+  mobileNumberError: { message: "", status: "" },
+  nameError: { message: "", status: "" },
   emailError:{ message: "", status: "" }
 };
 
@@ -38,53 +39,26 @@ const SignUp = () => {
   const toast = useToast();
   const [userInfo, setUserInfo] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState(initialError);
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
-
-  // Validating Unique userName
-  const validateUniqueUserName = async (value) => {
-    const usernamePattern =
-      /^(?=.{3,16}$)(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
-
-    if (!usernamePattern.test(value)) {
-      return setErrorMessage({
-        ...errorMessage,
-        userNameError: { status: "error", message: "Invalid User Name!" },
-      });
-    }
-    try {
-      const { message, status } = await _post("/uniqueusername", {
-        userName: value,
-      });
-      setErrorMessage({
-        ...errorMessage,
-        userNameError: { status: status ? "success" : "error", message },
-      });
-    } catch (err) {
-      setErrorMessage({
-        ...errorMessage,
-        userNameError: { status: "error", message: err.response.data.message },
-      });
-      console.log(err);
-    }
-  };
 
   // Handle input changes
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUserInfo({ ...userInfo, [name]: value });
 
-    if (name === "userFullName") {
+    if (name === "name") {
       if (value === "") {
         return setErrorMessage({
           ...errorMessage,
-          userFullNameError: initialError.userFullNameError,
+          nameError: initialError.nameError,
         });
       }
 
       if (/\d/.test(value)) {
         return setErrorMessage({
           ...errorMessage,
-          userFullNameError: {
+          nameError: {
             status: "error",
             message: "No Numbers Allowed" ,
           },
@@ -93,7 +67,7 @@ const SignUp = () => {
 
       setErrorMessage({
         ...errorMessage,
-        userFullNameError:
+        nameError:
           value.length < 4
             ? {
                 message: "Too Short",
@@ -103,37 +77,31 @@ const SignUp = () => {
       });
     }
      
-    if (name === "userName") {
+    if (name === "mobileNumber") {
       if (value === "") {
         return setErrorMessage({
           ...errorMessage,
-          userNameError: initialError.userNameError,
+          mobileNumberError: initialError.mobileNumberError,
         });
       }
-      validateUniqueUserName(value);
+      // mobile number validation need to be right here
     }
 
-    if(name === 'userEmail'){
-      if(value === ""){
-           return setErrorMessage({
+    if(name === 'email'){
+           setErrorMessage({
             ...errorMessage,
             emailError: initialError.emailError,
           });
-      }
-      if(!EmailValidator.validate(value)){
-         return  setErrorMessage({
+
+      if(EmailValidator.validate(value)){
+         return setErrorMessage({
           ...errorMessage,
-          emailError: { message:"Email Invalid!" , status:"error" },
+          emailError: { message:"Valid Email!" , status:"success" },
         });
       }
-
-      setErrorMessage({
-        ...errorMessage,
-        emailError: { message:"Valid Email!" , status:"success" },
-      });
     }
 
-    if (name === "userPassword") {
+    if (name === "password") {
       // Reset error if password is cleared
       if (value === "") {
         return setErrorMessage({
@@ -169,23 +137,46 @@ const SignUp = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form reload
-    setLoading(true);
+    
+    // Password matching validation
+    if (userInfo.password !== userInfo.retypePassword) {
+      return handleClick("Passwords don't match!", "error", "Failed!");
+    }
 
+    // Check if any form error is still present
+    const statusFalse = Object.keys(errorMessage).find(
+      (ele) => errorMessage[ele]["status"] === "error"
+    );
+
+    if (statusFalse) {
+      return handleClick("Please fix form errors before submitting.", "error", "Failed!");
+    }
+
+    setLoading(true);
     try {
-      const data = await _post("/registeruser", userInfo);
-      setUserInfo(initialData);
-      handleClick("Data Added Successfully!", "success");
+      const data = await _post("/auth/signUp", userInfo);
+      
+      // If data submission is successful
+      if (data.status) {
+        handleClick("Data Added Successfully!", "success", "Success!");
+        
+        // Optionally reset form data here if needed
+        setUserInfo(initialData);
+        
+        navigate("/login");
+      }
     } catch (err) {
-      console.log(err, "data");
+      console.error(err);
+      handleClick(err.response.data.message, "error", "Error!");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClick = (message, status) => {
+  const handleClick = (message, status,title) => {
     toast({
       position: "top",
-      title: "Success!",
+      title,
       description: message,
       status,
       duration: 5000,
@@ -232,37 +223,34 @@ const SignUp = () => {
                   <FormLabel>Full name</FormLabel>
                   <Input
                     placeholder="Full name"
-                    name="userFullName"
+                    name="name"
                     className="mb-1"
-                    value={userInfo.userFullName}
+                    value={userInfo.name}
                     onChange={handleChange}
                   />
-                  <AlertAnimation
-                    message={errorMessage.userFullNameError.message}
-                    status={errorMessage.userFullNameError.status}
-                  />
+                  { errorMessage.nameError.status && <AlertAnimation
+                    message={errorMessage.nameError.message}
+                    status={errorMessage.nameError.status}
+                  />}
+                  
                 </FormControl>
 
-                <FormControl id="UserName" isRequired>
-                  <FormLabel>User Name</FormLabel>
-                  <Box position="relative">
+                <FormControl id="mobileNumber" isRequired>
+                  <FormLabel>Mobile Numebr</FormLabel>
+                  <Box>
                     <Input
-                      placeholder="User name"
-                      name="userName"
+                      placeholder="Mobile Number"
+                      name="mobileNumber"
                       className="mb-1"
-                      value={userInfo.userName}
+                      value={userInfo.mobileNumber}
                       onChange={handleChange}
                     />
-                    <AlertAnimation
-                      message={errorMessage.userNameError.message}
-                      status={errorMessage.userNameError.status}
-                      position="absolute"
-                      bottom="0"
-                      left="0"
-                      right="0"
-                      bg="white"
-                      zIndex="docked"
+                    {
+                      errorMessage.mobileNumberError.status && <AlertAnimation
+                      message={errorMessage.mobileNumberError.message}
+                      status={errorMessage.mobileNumberError.status}
                     />
+                    }
                   </Box>
                 </FormControl>
               </Grid>
@@ -273,34 +261,30 @@ const SignUp = () => {
                   type="email"
                   placeholder="Email"
                   className='mb-1'
-                  name="userEmail"
-                  value={userInfo.userEmail}
+                  name="email"
+                  value={userInfo.email}
                   onChange={handleChange}
                 />
-                <AlertAnimation message={errorMessage.emailError.message} status={errorMessage.emailError.status} />
+                { errorMessage.emailError.status && <AlertAnimation message={errorMessage.emailError.message} status={errorMessage.emailError.status} />}
               </FormControl>
 
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
-                <Box position="relative">
+                <Box>
                   <Input
                     type="password"
                     className="mb-1"
                     placeholder="Password"
-                    name="userPassword"
-                    value={userInfo.userPassword}
+                    name="password"
+                    value={userInfo.password}
                     onChange={handleChange}
                   />
-                  <AlertAnimation
+                  {
+                    errorMessage.passwordError.status && <AlertAnimation
                     message={errorMessage.passwordError.message}
                     status={errorMessage.passwordError.status}
-                    position="absolute"
-                    bottom="0"
-                    left="0"
-                    right="0"
-                    bg="white"
-                    zIndex="docked"
                   />
+                  }
                 </Box>
               </FormControl>
 
@@ -309,8 +293,8 @@ const SignUp = () => {
                 <Input
                   type="password"
                   placeholder="Retype Password"
-                  name="userRetypePassword"
-                  value={userInfo.userRetypePassword}
+                  name="retypePassword"
+                  value={userInfo.retypePassword}
                   onChange={handleChange}
                 />
               </FormControl>
