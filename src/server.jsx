@@ -2,8 +2,6 @@ import axios from 'axios'; // Make sure 'axios' is imported correctly
 
 const baseUrl = process.env.REACT_APP_SERVER_URL;
 
-console.log(baseUrl,'yash')
-
 // Function to return headers (e.g., for authorization)
 const getHeader = () => {
     return {
