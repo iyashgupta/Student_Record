@@ -5,8 +5,8 @@ import logo from "../../assests/logo.svg"
 import { useNavigate } from 'react-router-dom';
 
 const initialLoginData = {
-  userEmail: "",
-  userPassword: "",
+  email: "",
+  password: "",
 };
 
 const Login = () => {
@@ -16,8 +16,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await _post('/login', userData);
-      console.log(res, 'front', 'printed');
+      const res = await _post('/auth/login', userData);
+       if(res.status){
+        sessionStorage.setItem('token',res.token)
+        navigate('/dashboard')
+       }else{
+          console.log('err while login')
+       }
     } catch (err) {
       console.error(err);
     }
@@ -39,8 +44,8 @@ const Login = () => {
   <input
     type="text"
     placeholder="Username"
-    name="userEmail"
-    value={userData.userEmail}
+    name="email"
+    value={userData.email}
     onChange={handleChange}
     required
   />
@@ -50,8 +55,8 @@ const Login = () => {
   <input
     type="password"
     placeholder="Password"
-    name="userPassword"
-    value={userData.userPassword}
+    name="password"
+    value={userData.password}
     onChange={handleChange}
     required
   />
@@ -133,8 +138,8 @@ export default Login;
 // import './loginsignup.css'
 
 // const initialLoginData = {
-//       userEmail : "",
-//       userPassword : "",
+//       email : "",
+//       password : "",
 // }
 
 // const Login = () => {
@@ -186,8 +191,8 @@ export default Login;
 //               focusBorderColor="blackAlpha.800"
 //               bg="white"
 //               borderRadius="md"
-//               name='userEmail'
-//               value={userData.userEmail}
+//               name='email'
+//               value={userData.email}
 //               onChange={handleChange}
 //               />
 //           </FormControl>
@@ -200,8 +205,8 @@ export default Login;
 //               focusBorderColor="blackAlpha.800"
 //               bg="white"
 //               borderRadius="md"
-//               name='userPassword'
-//               value={userData.userPassword}
+//               name='password'
+//               value={userData.password}
 //               onChange={handleChange}
 //             />
 //           </FormControl>

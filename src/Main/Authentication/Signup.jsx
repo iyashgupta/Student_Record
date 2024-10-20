@@ -16,17 +16,9 @@ const initialData = {
   email: "",
 };
 
-// Initial error data
-const initialError = {
-  passwordError: { message: "", status: "" },
-  mobileNumberError: { message: "", status: "" },
-  nameError: { message: "", status: "" },
-  emailError: { message: "", status: "" },
-};
 
 const Signup = () => {
   const [userInfo, setUserInfo] = useState(initialData);
-  const [errorMessage, setErrorMessage] = useState(initialError);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
@@ -37,82 +29,35 @@ const Signup = () => {
     setUserInfo({ ...userInfo, [name]: value });
 
     // Name validation
-    if (name === "name") {
-      if (/\d/.test(value)) {
-        return setErrorMessage({
-          ...errorMessage,
-          nameError: {
-            status: "error",
-            message: "No Numbers Allowed",
-          },
-        });
-      }
-      setErrorMessage({
-        ...errorMessage,
-        nameError:
-          value.length < 4
-            ? { message: "Too Short", status: "error" }
-            : { message: "Looks Good", status: "success" },
-      });
-    }
+    // if (name === "name") {
+    //   if (/\d/.test(value)) {
+    //   }
+    // }
 
     // Mobile number validation (optional: add validation logic here)
-    if (name === "mobileNumber") {
-      setErrorMessage({
-        ...errorMessage,
-        mobileNumberError: initialError.mobileNumberError,
-      });
-    }
+    // if (name === "mobileNumber") {
+    //   setErrorMessage({
+    //     ...errorMessage,
+    //     mobileNumberError: initialError.mobileNumberError,
+    //   });
+    // }
 
     // Email validation
-    if (name === "email") {
-      setErrorMessage({
-        ...errorMessage,
-        emailError: initialError.emailError,
-      });
-
-      if (EmailValidator.validate(value)) {
-        return setErrorMessage({
-          ...errorMessage,
-          emailError: { message: "Valid Email!", status: "success" },
-        });
-      }
-    }
+    // if (name === "email") {
+    //   if (EmailValidator.validate(value)) {
+    //   }
+    // }
 
     // Password validation
-    if (name === "password") {
-      const strength = passwordStrength(value).value;
-      if (strength === "Weak" || strength === "Too weak") {
-        return setErrorMessage({
-          ...errorMessage,
-          passwordError: { message: "Weak Password", status: "error" },
-        });
-      }
-      if (strength === "Medium") {
-        return setErrorMessage({
-          ...errorMessage,
-          passwordError: { message: "Password Not Secured", status: "warning" },
-        });
-      }
-      setErrorMessage({
-        ...errorMessage,
-        passwordError: { message: "Secured Password", status: "success" },
-      });
-    }
+  //   if (name === "password") {
+  //     const strength = passwordStrength(value).value;
+  //     if (strength === "Medium") {
+  //   }
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form reload
-
-    // Check for any remaining errors
-    const statusFalse = Object.keys(errorMessage).find(
-      (ele) => errorMessage[ele]["status"] === "error"
-    );
-    if (statusFalse) {
-      return handleClick("Please fix form errors before submitting.", "error", "Failed!");
-    }
-
     setLoading(true);
     try {
       const data = await _post("/auth/signUp", userInfo);
@@ -147,7 +92,6 @@ const Signup = () => {
         <div className="signin-signup">
           <form className="sign-up-form" onSubmit={handleSubmit}>
             <h2 className="title">Sign up</h2>
-            {/* <h5>invalid credential</h5> */}
             <div className="input-field">
               <i className="fas fa-user"></i>
               <input
@@ -157,9 +101,6 @@ const Signup = () => {
                 value={userInfo.name}
                 onChange={handleChange}
               />
-              {/* {errorMessage.nameError.status && (
-                <AlertAnimation message={errorMessage.nameError.message} status={errorMessage.nameError.status} />
-              )} */}
             </div>
 
             <div className="input-field">
@@ -171,9 +112,6 @@ const Signup = () => {
                 value={userInfo.email}
                 onChange={handleChange}
               />
-              {/* {errorMessage.emailError.status && (
-                <AlertAnimation message={errorMessage.emailError.message} status={errorMessage.emailError.status} />
-              )} */}
             </div>
 
             <div className="input-field">
@@ -185,9 +123,6 @@ const Signup = () => {
                 value={userInfo.mobileNumber}
                 onChange={handleChange}
               />
-              {/* {errorMessage.mobileNumberError.status && (
-                <AlertAnimation message={errorMessage.mobileNumberError.message} status={errorMessage.mobileNumberError.status} />
-              )} */}
             </div>
 
             <div className="input-field">
@@ -199,9 +134,6 @@ const Signup = () => {
                 value={userInfo.password}
                 onChange={handleChange}
               />
-              {/* {errorMessage.passwordError.status && (
-                <AlertAnimation message={errorMessage.passwordError.message} status={errorMessage.passwordError.status} />
-              )} */}
             </div>
 
             <input type="submit" className="btn" value="Sign up" />

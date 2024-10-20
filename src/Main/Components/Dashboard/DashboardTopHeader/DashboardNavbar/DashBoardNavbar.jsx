@@ -1,6 +1,16 @@
 import React from 'react'
+import { _get } from '../../../../../server'
+import { useNavigate } from 'react-router-dom'
 
 const DashBoardNavbar = () => {
+   const navigate = useNavigate()
+//   const getDashboardData = () => {
+//     _get('/dashboard/user').then((res) => {
+//       console.log('dashboard data : ',res)
+//     }).catch((err) => {
+//        console.log('dashboard data : ',err)
+//     })
+//   }
   return (
     <div className="row align-items-center">
                 <div className="col-sm-6 col-12 mb-4 mb-sm-0">
@@ -20,7 +30,7 @@ const DashBoardNavbar = () => {
                       <span className="pe-2">
                         <i className="bi bi-plus"></i>
                       </span>
-                      <span>Create</span>
+                      <span onClick={() => navigate("/blog/register")}>Create</span>
                     </span>
                   </div>
                 </div>
