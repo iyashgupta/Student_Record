@@ -3,34 +3,23 @@ import ToperSidebar from "../sidebar/ToperSidebar/ToperSidebar";
 import SidebarFooter from "./SidebarFooter/SidebarFooter";
 import SideBarLogoHeader from "./SidebarLogoHeader/SideBarLogoHeader";
 import "../sidebar/Sidebar.css"; // Assuming you use CSS modules or a similar approach for styles
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [selectedTab, setSelectedTab] = useState('Dashboard');
+  const navigate=useNavigate()
 
   return (
     <nav
-      className="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg"
+      className="navbar show navbar-vertical  navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg"
       id="navbarVertical"
     >
       <div className="container-fluid">
-        {/* Toggler */}
-        <button
-          className="navbar-toggler ms-n2"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#sidebarCollapse"
-          aria-controls="sidebarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          {/* <span className="navbar-toggler-icon"></span> */}
-        </button>
-
         {/* SideBar Logo Header */}
         <SideBarLogoHeader />
 
         {/* User menu (mobile) */}
-        <div className="navbar-user d-lg-none">
+        {/* <div className="navbar-user d-lg-none">
           <div className="dropdown">
             <span
               id="sidebarAvatar"
@@ -59,13 +48,13 @@ const Sidebar = () => {
               <span className="dropdown-item">Logout</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Collapse */}
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           {/* Navigation */}
-          <ul className="navbar-nav">
-            <li className="nav-item">
+          <ul className="navbar-nav" >
+            <li className="nav-item" onClick={() => navigate('/dashboard')}>
               <span
                 className={`nav-link cursor-pointer ${selectedTab === 'Dashboard' ? 'active-tab' : ''}`}
                 onClick={() => setSelectedTab('Dashboard')}
@@ -74,19 +63,18 @@ const Sidebar = () => {
                 Dashboard
               </span>
             </li>
-            <li className="nav-item">
-              <span  className={`nav-link cursor-pointer ${selectedTab === 'Messages' ? 'active-tab' : ''}`}
-                onClick={() => setSelectedTab('Messages')}>
-                <i className={`bi bi-chat ${selectedTab === 'Messages' ? 'active-icon' : ''}`}></i> Messages
+            <li className="nav-item" onClick={() => navigate('/blog/register')}>
+              <span  className={`nav-link cursor-pointer ${selectedTab === 'Add Blog' ? 'active-tab' : ''}`}
+                onClick={() => setSelectedTab('Add Blog')}>
+                <i className={`bi bi-chat ${selectedTab === 'Add Blog' ? 'active-icon' : ''}`}></i> Add New Blog
                 <span className="badge bg-soft-primary text-primary rounded-pill d-inline-flex align-items-center ms-auto">
                   6
                 </span>
               </span>
             </li>
             <li className="nav-item cursor-pointer">
-            <span  className={`nav-link cursor-pointer ${selectedTab === 'Student List' ? 'active-tab' : ''}`}
-                onClick={() => setSelectedTab('Student List')}>
-                <i className={`bi bi-people ${selectedTab === 'Student List' ? 'active-icon' : ''}`}></i> Student List
+            <span  className={`nav-link cursor-pointer `}>
+                <i className={`bi bi-people`}></i> Student List
               </span>
             </li>
           </ul>

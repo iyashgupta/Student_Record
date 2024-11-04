@@ -7,21 +7,24 @@ import {
   Button,
 } from "@chakra-ui/react";
 import "./BlogRegistration.css";
+import { useNavigate } from "react-router-dom";
+import { _post } from "../../../server";
 
 // Define the fields for the form
 const formsField = [
   { id: 1, name: "title", errMessage: "Field cannot be empty" },
-  { id: 2, name: "author", errMessage: "Field cannot be empty" },
+  // { id: 2, name: "author", errMessage: "Field cannot be empty" },
   { id: 3, name: "content", errMessage: "Field cannot be empty" },
-  { id: 4, name: "description", errMessage: "Field cannot be empty" },
+  // { id: 4, name: "description", errMessage: "Field cannot be empty" },
 ];
 
 const BlogRegistrationForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
-    author: "",
+    // author: "",
     content: "",
-    description: "",
+    // description: "",
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -55,7 +58,9 @@ const BlogRegistrationForm = () => {
     setFormErrors(errors);
     if (Object.keys(errors).length === 0) {
       // Proceed with form submission logic
-      console.log("Form submitted successfully", formData);
+
+      _post('/blog/register',formData)
+      
     }
   };
 
@@ -64,25 +69,38 @@ const BlogRegistrationForm = () => {
       <form className="form-group" onSubmit={handleSubmit}>
         {formsField.map((ele) => (
           <FormControl key={ele.id} isInvalid={formErrors[ele.name]} mb={2}>
-            <FormLabel>{ele.name.charAt(0).toUpperCase() + ele.name.slice(1)}</FormLabel>
+            <FormLabel>
+              {ele.name.charAt(0).toUpperCase() + ele.name.slice(1)}
+            </FormLabel>
             <Input
-              type="text" 
+              type="text"
               name={ele.name} // Add name for input binding
               width="100%"
-              value={formData[ele.name]} 
+              value={formData[ele.name]}
               onChange={handleChange} // Handle change
             />
-            <FormErrorMessage 
-              mt={0} 
+            <FormErrorMessage
+              mt={0}
               visibility={formErrors[ele.name] ? "visible" : "hidden"} // Use visibility to control display
             >
               {ele.errMessage}
             </FormErrorMessage>
           </FormControl>
         ))}
-        <Button type="submit" colorScheme="teal" mt={4}>
-          Submit
-        </Button>
+        <div className="d-flex justify-content-center mt-4">
+          <Button
+            colorScheme="green"
+            variant="ghost"
+            style={{ textDecoration: "underline", fontSize: "1.1rem" }}
+            onClick={() => navigate("/dashboard")}
+          >
+            Back
+          </Button>
+
+          <Button type="submit" colorScheme="teal" ml={2}>
+            Submit
+          </Button>
+        </div>
       </form>
     </div>
   );

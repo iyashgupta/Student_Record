@@ -11,7 +11,7 @@ import "./loginsignup.css";
 // Initial form data
 const initialData = {
   name: "",
-  mobileNumber: "",
+  userName: "",
   password: "",
   email: "",
 };
@@ -35,10 +35,10 @@ const Signup = () => {
     // }
 
     // Mobile number validation (optional: add validation logic here)
-    // if (name === "mobileNumber") {
+    // if (name === "userName") {
     //   setErrorMessage({
     //     ...errorMessage,
-    //     mobileNumberError: initialError.mobileNumberError,
+    //     userNameError: initialError.userNameError,
     //   });
     // }
 
@@ -118,9 +118,9 @@ const Signup = () => {
               <i className="fas fa-phone"></i>
               <input
                 type="text"
-                placeholder="Mobile number"
-                name="mobileNumber"
-                value={userInfo.mobileNumber}
+                placeholder="Enter UserName"
+                name="userName"
+                value={userInfo.userName}
                 onChange={handleChange}
               />
             </div>
@@ -206,7 +206,7 @@ export default Signup;
 // // Initial form data
 // const initialData = {
 //   name: "",
-//   mobileNumber: "",
+//   userName: "",
 //   password: "",
 //   retypePassword: "",
 //   email: "",
@@ -214,7 +214,7 @@ export default Signup;
 
 // const initialError = {
 //   passwordError: { message: "", status: "" },
-//   mobileNumberError: { message: "", status: "" },
+//   userNameError: { message: "", status: "" },
 //   nameError: { message: "", status: "" },
 //   emailError:{ message: "", status: "" }
 // };
@@ -261,11 +261,11 @@ export default Signup;
 //       });
 //     }
 
-//     if (name === "mobileNumber") {
+//     if (name === "userName") {
 //       if (value === "") {
 //         return setErrorMessage({
 //           ...errorMessage,
-//           mobileNumberError: initialError.mobileNumberError,
+//           userNameError: initialError.userNameError,
 //         });
 //       }
 //       // mobile number validation need to be right here
@@ -419,20 +419,20 @@ export default Signup;
 
 //                 </FormControl>
 
-//                 <FormControl id="mobileNumber" isRequired>
+//                 <FormControl id="userName" isRequired>
 //                   <FormLabel>Mobile Numebr</FormLabel>
 //                   <Box>
 //                     <Input
 //                       placeholder="Mobile Number"
-//                       name="mobileNumber"
+//                       name="userName"
 //                       className="mb-1"
-//                       value={userInfo.mobileNumber}
+//                       value={userInfo.userName}
 //                       onChange={handleChange}
 //                     />
 //                     {
-//                       errorMessage.mobileNumberError.status && <AlertAnimation
-//                       message={errorMessage.mobileNumberError.message}
-//                       status={errorMessage.mobileNumberError.status}
+//                       errorMessage.userNameError.status && <AlertAnimation
+//                       message={errorMessage.userNameError.message}
+//                       status={errorMessage.userNameError.status}
 //                     />
 //                     }
 //                   </Box>

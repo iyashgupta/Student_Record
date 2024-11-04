@@ -19,11 +19,7 @@ const Topper = [
   {
     Topper_Name: "Michael Jordan",
     TopperAddress: "Bucharest, RO",
-  },
-  {
-    Topper_Name: "Robert Almera",
-    TopperAddress: "New York , US",
-  },
+  }
 ];
 
 const ToperSidebar = () => {
@@ -35,7 +31,7 @@ const ToperSidebar = () => {
               <Box as="span" flex="1" textAlign="left">
                 <li>
                   <div className="nav-link text-xs font-semibold text-uppercase text-muted ls-wide">
-                    Highest Marks
+                     Lattest Blogs Creators
                     <span className="badge bg-soft-primary text-primary rounded-pill d-inline-flex align-items-center ms-5">
                       3
                     </span>

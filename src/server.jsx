@@ -1,13 +1,14 @@
 import axios from 'axios'; // Make sure 'axios' is imported correctly
 
 const baseUrl = process.env.REACT_APP_SERVER_URL;
+// const baseUrl = "http://localhost:8080";
 
 // Function to return headers (e.g., for authorization)
 const getHeader = () => {
     return {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}` 
       }
     };
   };
